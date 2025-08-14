@@ -13,9 +13,13 @@ class InstructorProfile extends Model
         'user_id',
         'total_earnings',
         'bio',
-        'github_link',
-        'google_link',
+        'twitter_link',
+        'linkdin_link',
+        'youtube_link',
         'facebook_link',
+        'name',
+        'image',
+        'role'
     ];
 
     public function user()

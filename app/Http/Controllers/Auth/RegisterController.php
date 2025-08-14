@@ -43,6 +43,7 @@ class RegisterController extends Controller
             'name'=>$user->name,
             'role' => $user->role,
             'email' => $user->email,
+            'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
 

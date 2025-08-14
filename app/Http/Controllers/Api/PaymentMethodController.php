@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use Stripe\Stripe;
 use Stripe\Customer;
 use Stripe\SetupIntent;
@@ -18,7 +19,7 @@ class PaymentMethodController extends Controller
 
     public function createSetupIntent(Request $request)
     {
-         Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = $request->user();
 
@@ -34,14 +35,17 @@ class PaymentMethodController extends Controller
             'customer' => $user->stripe_customer_id,
         ]);
 
-        return response()->json([
+     
+        return ApiResponse::sendResponse(200, 'Setup Intent created successfully', [
             'client_secret' => $intent->client_secret,
-        ], 200);
+        ]);
     }
 
     public function index()
     {
-        //
+        $user = request()->user();
+        $paymentMethods = PaymentMethod::where('user_id', $user->id)->get();
+        return ApiResponse::sendResponse(200, 'Payment methods retrieved successfully', $paymentMethods);
     }
 
     /**
@@ -49,7 +53,7 @@ class PaymentMethodController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
+        $request->validate([
             'payment_method' => 'required|string',
         ]);
 
@@ -71,7 +75,7 @@ class PaymentMethodController extends Controller
             'brand' => $pm->card->brand ?? null,
             'last4' => $pm->card->last4 ?? null,
             'billing_details' => $pm->billing_details ? (array)$pm->billing_details : null,
-            
+
         ]);
 
         return response()->json([
@@ -93,7 +97,7 @@ class PaymentMethodController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+       
     }
 
     /**
@@ -101,6 +105,11 @@ class PaymentMethodController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = request()->user();
+        $paymentMethod = PaymentMethod::where('user_id', $user->id)->where('id', $id)->firstOrFail();
+        Stripe::setApiKey(config('services.stripe.secret'));
+        StripePaymentMethod::retrieve($paymentMethod->stripe_pm_id)->detach();
+        $paymentMethod->delete();
+        return ApiResponse::sendResponse(200, 'Payment method deleted successfully');
     }
 }

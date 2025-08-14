@@ -7,13 +7,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
 use App\Notifications\CustomPasswordReset;
+
+use Laravel\Scout\Searchable;
+
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, Searchable;
+  
+      /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
 
+    protected $fillable = ['name', 'email', 'password', 'role', 'verification_code','image',
+        'first_name',
+        'last_name',
+        'headline',
+        'about',
+        'twitter_link',
+        'linkedin_link',
+        'youtube_link',
+        'facebook_link',];
 
     /**
      * Send the password reset notification.
@@ -25,21 +43,6 @@ class User extends Authenticatable
     {
         $this->notify(new CustomPasswordReset($token));
     }
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = ['name', 'email', 'password', 'role', 'verification_code','image',
-        'first_name',
-        'last_name',
-        'headline',
-        'about',
-        'twitter_link',
-        'linkedin_link',
-        'youtube_link',
-        'facebook_link',];
 
     // Accessors for links
     public function getTwitterLinkAttribute($value)
@@ -63,8 +66,11 @@ class User extends Authenticatable
     }    
 
     /*protected $guarded = [
+
+    protected $guarded = [
+
         'id'
-    ];*/
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -121,5 +127,27 @@ class User extends Authenticatable
     public function paymentMethods()
     {
         return $this->hasMany(PaymentMethod::class);
+    }
+
+    public function instructorProfile()
+    {
+        return $this->hasOne(InstructorProfile::class, 'user_id');
+    }
+
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role,
+            'status' => $this->status,
+            'nationality' => $this->nationality,
+        ];
+
     }
 }

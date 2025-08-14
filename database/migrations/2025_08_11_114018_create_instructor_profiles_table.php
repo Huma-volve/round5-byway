@@ -17,8 +17,9 @@ return new class extends Migration
             $table->text('bio');
             $table->decimal('total_earnings', 10, 2)->default(0);
             // Social Media Links
-            $table->string('github_link')->nullable();
-            $table->string('google_link')->nullable();
+            $table->string('twitter_link')->nullable();
+            $table->string('linkdin_link')->nullable();
+            $table->string('youtube_link')->nullable();
             $table->string('facebook_link')->nullable();
             $table->timestamps();
         });
