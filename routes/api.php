@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\CourseManagementController;
 use App\Http\Controllers\Api\ReviewManagementController;
 use App\Http\Controllers\Api\LearnerCourseController;
 use App\Http\Controllers\Api\Learner\CourseInteractionController;
+use App\Http\Controllers\Api\CourseShowController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -117,3 +118,6 @@ Route::middleware('auth:sanctum')->prefix('learner')->group(function () {
     Route::post('/cart/remove', [CourseInteractionController::class, 'removeFromCart']);
     Route::get('/cart', [CourseInteractionController::class, 'getCart']);
 });
+
+// Public route – no login required
+Route::get('/courses/{id}', [CourseShowController::class, 'show']);
