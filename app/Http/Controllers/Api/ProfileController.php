@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Helpers\ApiResponse;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -83,5 +84,48 @@ class ProfileController extends Controller
                 'facebook_link' => $user->facebook_link,
             ]
         ]);
+    }
+
+    public function closeAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string'
+        ]);
+
+        $user = $request->user();
+
+        // Check if already requested
+        if ($user->deletion_requested_at) {
+            return ApiResponse::sendError('Account closure already requested.', 400);
+        }
+
+        // Verify password
+        if (!Hash::check($request->password, $user->password)) {
+            return ApiResponse::sendError('Password is incorrect.', 400);
+        }
+
+        // Mark for deletion
+        $user->update([
+            'deletion_requested_at' => now()
+        ]);
+
+        return ApiResponse::sendResponse(200, 'Account closure requested. You can cancel within 14 days by logging in.');
+    }
+
+    /**
+     * Get account status
+     */
+    public function status(Request $request)
+    {
+        $user = $request->user();
+        $status = $user->deletion_requested_at ? 'pending_closure' : 'active';
+
+        $data = ['status' => $status];
+
+        if ($user->deletion_requested_at) {
+            $data['closure_date'] = $user->deletion_requested_at->addDays(14)->toISOString();
+        }
+
+        return ApiResponse::sendResponse(200, 'Account status retrieved.', $data);
     }
 }

@@ -35,6 +35,6 @@ class DatabaseSeeder extends Seeder
         Lesson::factory(50)->create();
         Review::factory(50)->create();
 
-        $this->call(CoursesTableSeeder::class);
+    
     }
 }

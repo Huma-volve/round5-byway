@@ -100,3 +100,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/learner/courses', [LearnerCourseController::class, 'index']);
 });
 
+Route::middleware('auth:sanctum')->prefix('profile')->group(function () {
+    Route::post('/close-account', [ProfileController::class, 'closeAccount']);
+    Route::get('/status', [ProfileController::class, 'status']);
+});
+

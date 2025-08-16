@@ -11,11 +11,12 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomPasswordReset;
 
 use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, Searchable;
+    use HasFactory, Notifiable, HasApiTokens, Searchable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +39,13 @@ class User extends Authenticatable
         'linkedin_link',
         'youtube_link',
         'facebook_link',
+        'deletion_requested_at',
+        'deleted_at',
+    ];
+
+
+    protected $casts = [
+        'deletion_requested_at' => 'datetime',
     ];
 
     /**
@@ -158,5 +166,19 @@ class User extends Authenticatable
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'enrollments', 'learner_id', 'course_id');
+    }
+
+    // Check if deletion is pending
+    public function isPendingDeletion()
+    {
+        return $this->status === 'pending_deletion';
+    }
+
+    // Check if within cancellation window (14 days)
+    public function canCancelDeletion()
+    {
+        if (!$this->isPendingDeletion()) return false;
+
+        return $this->deletion_requested_at->addDays(14)->isFuture();
     }
 }
