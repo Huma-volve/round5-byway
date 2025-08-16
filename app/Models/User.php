@@ -17,13 +17,19 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, Searchable;
 
-      /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
 
-    protected $fillable = ['name', 'email', 'password', 'role', 'verification_code','image',
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'verification_code',
+        'image',
         'first_name',
         'last_name',
         'headline',
@@ -31,7 +37,8 @@ class User extends Authenticatable
         'twitter_link',
         'linkedin_link',
         'youtube_link',
-        'facebook_link',];
+        'facebook_link',
+    ];
 
     /**
      * Send the password reset notification.
@@ -119,10 +126,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class, 'favorites')->withTimestamps();
     }
-    public function courses()
-    {
-        return $this->hasMany(Course::class);
-    }
+
 
     public function paymentMethods()
     {
@@ -148,6 +152,11 @@ class User extends Authenticatable
             'status' => $this->status,
             'nationality' => $this->nationality,
         ];
+    }
 
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments', 'learner_id', 'course_id');
     }
 }
