@@ -16,7 +16,7 @@ class Course extends Model
         'status',
         'price',
         'category_id',
-        'user_id'
+        'user_id',
     ];
 
     protected $casts = [

@@ -35,6 +35,10 @@ class DatabaseSeeder extends Seeder
         Lesson::factory(50)->create();
         Review::factory(50)->create();
 
-    
+    $this->call([
+        UserSeeder::class,
+        CourseSeeder::class,
+        FavoritesCartSeeder::class,
+    ]);
     }
 }

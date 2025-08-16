@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->text('description');
-            $table->string('video_url');
-            $table->enum('status', ["published","unpublished"]);
+            $table->string('video_url')->nullable();
+            $table->enum('status', ["published","unpublished"])->nullable();
             $table->decimal('price');
-            $table->foreignId('category_id')->references('id')->on('categories');
+            $table->foreignId('category_id')->references('id')->on('categories')->nullable();
             $table->timestamps();
         });
 

@@ -9,6 +9,9 @@ class Cart extends Model
     protected $table = 'carts';
     protected $guarded = [];
 
+    protected $fillable = ['user_id', 'course_id'];
+
+
 
     public function user()
     {
