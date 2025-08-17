@@ -181,4 +181,9 @@ class User extends Authenticatable
 
         return $this->deletion_requested_at->addDays(14)->isFuture();
     }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'learner_id');
+    }
 }

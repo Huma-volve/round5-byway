@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\ReviewManagementController;
 use App\Http\Controllers\Api\LearnerCourseController;
 use App\Http\Controllers\Api\Learner\CourseInteractionController;
 use App\Http\Controllers\Api\CourseShowController;
+use App\Http\Controllers\Api\Learner\CourseProgressController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -121,3 +122,11 @@ Route::middleware('auth:sanctum')->prefix('learner')->group(function () {
 
 // Public route – no login required
 Route::get('/courses/{id}', [CourseShowController::class, 'show']);
+
+Route::middleware('auth:sanctum')->prefix('learner')->group(function () {
+    // Mark lesson as completed
+    Route::post('/lessons/{lessonId}/complete', [CourseProgressController::class, 'completeLesson']);
+
+    // Submit course review
+    Route::post('/courses/{courseId}/review', [CourseProgressController::class, 'submitReview']);
+});
