@@ -26,6 +26,12 @@ class LoginController extends Controller
             ]);
         }
 
+        // 🔒 Check if the user is blocked
+        if ($user->status === 'Blocked'){
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been blocked. Please contact support.'],
+            ]);
+        }
         // Revoke existing tokens (optional: keep only one active session)
         $user->tokens()->delete();
 
@@ -41,6 +47,7 @@ class LoginController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
                 'is_verified' => $user->is_verified,
+                'status' => $user->status,
             ]
         ]);
     }

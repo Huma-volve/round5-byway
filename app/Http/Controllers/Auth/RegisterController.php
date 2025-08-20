@@ -20,7 +20,7 @@ class RegisterController extends Controller
             'name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:learner,teacher',
+            'role' => 'required|string|in:learner,instructor',
             'first_name' =>  'required|string',
             'last_name' => 'required|string',
             'headline' => ['nullable', 'string', 'max:100'],
@@ -51,6 +51,7 @@ class RegisterController extends Controller
             'facebook_link' => trim($request->facebook_link),
             'verification_code' => $code,
             'is_verified' => false,
+            'status'=>'active',
         ]);
 
         // Send verification email
@@ -70,6 +71,7 @@ class RegisterController extends Controller
             'linkedin_link' => trim($request->linkedin_link),
             'youtube_link' => trim($request->youtube_link),
             'facebook_link' => trim($request->facebook_link),
+            'status'=>$user->status,
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
