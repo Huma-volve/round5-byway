@@ -13,9 +13,14 @@ class Lesson extends Model
         'title',
         'description',
         'video_url',
+<<<<<<< Updated upstream
         'video_duration',
         'materials',
         'order',
+=======
+        'description',
+        'duration',
+>>>>>>> Stashed changes
         'course_id',
     ];
 

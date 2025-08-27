@@ -27,6 +27,10 @@ class TeacherProfileController extends Controller
     {
         $data = $request->validate([
             'bio'            => 'sometimes|string|max:1000',
+        'headline'   => 'nullable|string|max:255',
+        'about'      => 'nullable|string',
+        'skills'     => 'nullable|array',
+        'work_experience' => 'nullable|array',
             'name'           => 'sometimes|string|max:255',
             'twitter_link'   => 'nullable|url',
             'linkdin_link'   => 'nullable|url',
@@ -60,7 +64,13 @@ class TeacherProfileController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'bio'            => 'required|string|max:1000',
+            'first_name' => 'nullable|string|max:100',
+            'last_name'  => 'nullable|string|max:100',
+            'headline'   => 'nullable|string|max:255',
+            'about'      => 'nullable|string',
+            'skills'     => 'nullable|array',
+            'work_experiences' => 'nullable|array',
+            'bio'            => 'nullable|string|max:1000',
             'twitter_link'   => 'nullable|url',
             'linkdin_link'   => 'nullable|url',
             'youtube_link'   => 'nullable|url',
@@ -76,7 +86,10 @@ class TeacherProfileController extends Controller
 
         $validated['user_id'] = $userId;
 
-        $profile = InstructorProfile::create($validated)->load('user');
+$profile = InstructorProfile::updateOrCreate(
+    ['user_id' => $userId], // الشرط
+    $validated              // القيم
+)->load('user');
 
         return ApiResponse::sendResponse(201, 'Profile created successfully', $profile);
     }

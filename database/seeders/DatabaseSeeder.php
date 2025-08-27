@@ -27,6 +27,44 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i <= 7; $i++) {
             User::factory()->create([
                 'role' => 'admin',
+<<<<<<< Updated upstream
+=======
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin1@gmail.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin2@gmail.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin3@gmail.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin4@gmail.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin5@gmail.com',
+                'role' => 'admin',
+            ],
+
+        ];
+
+        foreach ($users as $user) {
+            User::firstOrCreate([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => Hash::make('12345678'),
+                'role' => $user['role'],
+>>>>>>> Stashed changes
                 'status' => 'Active',
                 'email' => "admin{$i}@gmail.com",
                 'password' => Hash::make('12345678'),
@@ -47,10 +85,15 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             CourseSeeder::class,
             FavoritesCartSeeder::class,
+<<<<<<< Updated upstream
             NotificationSeeder::class,
             OrderSeeder::class,
             FavoritesCartSeeder::class,
+=======
+                LessonSeeder::class
+>>>>>>> Stashed changes
 
         ]);
+
     }
 }

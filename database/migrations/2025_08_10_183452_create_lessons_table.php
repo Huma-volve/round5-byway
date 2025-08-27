@@ -16,7 +16,13 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+<<<<<<< Updated upstream
             $table->text('description')->nullable(); // وصف الدرس
+=======
+                $table->text('description');
+            $table->text('duration');
+
+>>>>>>> Stashed changes
             $table->string('video_url');
             $table->integer('video_duration')->nullable(); // مدة الفيديو بالثواني
             $table->json('materials')->nullable(); // المواد الإضافية (ملفات PDF، روابط، إلخ)
@@ -33,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lesson');
+        Schema::dropIfExists('lessons');
     }
 };
