@@ -1,44 +1,56 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace Database\Seeders;
 
-return new class extends Migration
+use App\Models\User;
+use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\Review;
+use App\Models\Category;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Seeders\FavoritesCartSeeder;
+use Illuminate\Database\Seeder;
+use Database\Factories\ReviewFactory;
+use Illuminate\Support\Facades\Hash;
+use Database\Seeders\FavoritesTableSeeder;
+use Database\Seeders\InstructorProfileSeeder;
+use Database\Seeders\PaymentSeeder;
+
+
+class DatabaseSeeder extends Seeder
 {
     /**
-     * Run the migrations.
+     * Seed the application's database.
      */
-    public function up(): void
+    public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
+        for ($i = 1; $i <= 7; $i++) {
+            User::factory()->create([
+                'role' => 'admin',
+                'status' => 'Active',
+                'email' => "admin{$i}@gmail.com",
+                'password' => Hash::make('12345678'),
+            ]);
+        }
 
-        Schema::create('lessons', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-<<<<<<< Updated upstream
-            $table->text('description')->nullable(); // وصف الدرس
-=======
-                $table->text('description');
-            $table->text('duration');
+        User::factory(10)->sequence(['role' => 'learner'], ['role' => 'instructor'])->create();
+        $this->call([
+            CategorySeeder::class,
+        ]);
+        Course::factory(10)->create();
+        Lesson::factory(50)->create();
+        Review::factory(50)->create();
 
->>>>>>> Stashed changes
-            $table->string('video_url');
-            $table->integer('video_duration')->nullable(); // مدة الفيديو بالثواني
-            $table->json('materials')->nullable(); // المواد الإضافية (ملفات PDF، روابط، إلخ)
-            $table->integer('order')->default(0); // ترتيب الدرس في الكورس
-            $table->foreignId('course_id')->references('id')->on('courses')->onDelete("cascade");
-            $table->timestamps();
-        });
+        $this->call([
+            InstructorProfileSeeder::class,
+            UserSeeder::class,
+            PaymentSeeder::class,
+            CourseSeeder::class,
+            FavoritesCartSeeder::class,
+            NotificationSeeder::class,
+            OrderSeeder::class,
+            FavoritesCartSeeder::class,
 
-        Schema::enableForeignKeyConstraints();
+        ]);
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('lessons');
-    }
-};
+}
