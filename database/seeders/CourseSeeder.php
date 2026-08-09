@@ -42,10 +42,11 @@ class CourseSeeder extends Seeder
             'user_id' => $instructorId,
             'title' => 'Mobile Development with Flutter',
             'description' => 'Learn to build cross-platform mobile apps.',
-            'video_url' => 'https://example.com/videos/flutter-course.mp4',
+            'video_url' => 'http://round5-byway.huma-volve.com/public/storage/
+            // videos/YOExFTSAv36jGfdiw6saruxtsoXAv7DpqyFWVKN7.mp4',
             'status' => 'published',
             'price' => 150,
-            'category_id' => 2,
+            'category_id' => 3,
         ]);
     }
 }

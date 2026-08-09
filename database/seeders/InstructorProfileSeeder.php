@@ -86,10 +86,46 @@ class InstructorProfileSeeder extends Seeder
             ]);
         }
 
+
         // إنشاء مدرسين إضافيين باستخدام Factory إذا كان موجود
         if (class_exists('App\Models\InstructorProfile')) {
             // يمكن إضافة factory هنا إذا كان موجود
             // InstructorProfile::factory(5)->create();
         }
+
+        InstructorProfile::create([
+            'user_id'        => $user->id,
+            // 'name'           => $user->name,
+            'bio'            => 'This is a sample instructor bio.',
+            'total_earnings' => 1200.50,
+            'twitter_link'   => 'https://twitter.com/test',
+            'linkdin_link'   => 'https://linkedin.com/in/test',
+            'youtube_link'   => 'https://youtube.com/@test',
+            'facebook_link'  => 'https://facebook.com/test',
+            // 'image'          => null,
+
+                'first_name' => 'Osamannn',
+                'last_name'  => 'El-Greidy',
+                'headline'   => 'Full Stack Developer',
+                'about'      => 'I love teaching and coding about Laravel, React, and Odoo.',
+                'skills'     => ['Laravel', 'React', 'Odoo', 'MySQL', 'API Development'],
+                'work_experiences' => [
+                    [
+                        'job_title'    => 'Backend Developer',
+                        'company_name' => 'TechCorp',
+                        'start_date'   => '2022-01-01',
+                        'end_date'     => '2023-06-01',
+                    ],
+                    [
+                        'job_title'    => 'Full Stack Developer',
+                        'company_name' => 'CodeWay',
+                        'start_date'   => '2023-07-01',
+                        'end_date'     => null,
+                    ]
+                ],
+            ]
+        );
+
+
     }
 }

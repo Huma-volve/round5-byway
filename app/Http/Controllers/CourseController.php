@@ -13,6 +13,26 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
+//mycourses//
+public function show(Course $course)
+{
+    $course->load('instructor'); // نحمل بيانات الانستراكتور
+
+    return response()->json([
+        'id' => $course->id,
+        'title' => $course->title,
+        'description' => $course->description,
+        'image' => $course->image,
+        'price' => $course->price,
+        'rating' => $course->rating,
+        'progress' => $course->progress, //  progress من الـ accessor
+        'instructor' => $course->instructor->name, //  اسم الانستراكتور
+        'lessons' => $course->lessons, // ممكن نرجع الدروس كمان
+    ]);
+}
+
+
+
     // إنشاء كورس جديد
     public function store(Request $request)
     {
@@ -67,15 +87,20 @@ class CourseController extends Controller
         }
 
         // فلترة بالتاريخ (من – إلى)
-        if ($request->has('from_date') && $request->has('to_date')) {
-            $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
-        }
+
+    // فلترة بالتاريخ
+    if ($request->has('from_date') && $request->has('to_date')) {
+        $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
+    }
         // الترتيب
-        if ($request->has('sort_by')) {
-            $sortBy = $request->sort_by; // price | rating
-            $sortOrder = $request->get('sort_order', 'asc'); // asc | desc
-            $query->orderBy($sortBy, $sortOrder);
-        }
+
+
+    $sortBy = $request->get('sort_by', 'price');   // price | rating
+    $sortOrder = $request->get('sort_order', 'asc'); // asc | desc
+    $query->orderBy($sortBy, $sortOrder);
+
+    $courses = $query->paginate(10);
+
 
         $courses = $query->paginate(10);
 
@@ -134,9 +159,9 @@ $course = Course::where('id', $id)
         $course->delete();
         return ApiResponse::sendResponse(200, 'Course and its lessons deleted successfully');
     }
-    public function show($id)
-    {
-        $course = Course::with(['instructor', 'lessons', 'reviews.user'])->findOrFail($id);
-        return ApiResponse::sendResponse(200, 'Course details retrieved successfully', $course);
-    }
+    // public function show($id)
+    // {
+    //     $course = Course::with(['instructor', 'lessons', 'reviews.user'])->findOrFail($id);
+    //     return ApiResponse::sendResponse(200, 'Course details retrieved successfully', $course);
+    // }
 }

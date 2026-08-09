@@ -134,7 +134,7 @@ class User extends Authenticatable
     }
 
 
-    
+
 
 
     // Check if deletion is pending
@@ -180,4 +180,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Enrollment::class, 'learner_id');
     }
+
+public function instructorCourses()
+{
+    return $this->hasMany(Course::class, 'user_id');
+}
+
+
 }

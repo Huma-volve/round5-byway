@@ -17,15 +17,21 @@ class Course extends Model
         'video_url',
         'status',
         'price',
+        'rating',
+        'image',
         'category_id',
         'user_id',
     ];
 
     protected $casts = [
+'price' => 'decimal:2',
+        'rating' => 'decimal:2',
         'created_at' => 'datetime',
-        'price' => 'decimal:2',
-    ];
 
+        'price' => 'decimal:2',
+
+        'updated_at' => 'datetime',
+    ];
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -64,6 +70,26 @@ class Course extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+
+
+    //دالة لحساب متوسط التقييمات//
+
+    public function updateRating()
+    {
+        $avg = $this->reviews()->avg('rating');
+        $this->rating = $avg ?? 0;
+        $this->save();
+    }
+
+
+
+
+
+    // ✅ Accessor يضيف progress ثابت (مثلاً 20%)
+    public function getProgressAttribute()
+    {
+        return "20%"; // ممكن بعدين نحسبها على حسب تقدم الطالب
+    }
     public function toSearchableArray()
     {
         $array = [
